@@ -1,44 +1,53 @@
 const express = require("express");
 const app = express();
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/task' ,{useNewUrlParser: true});
+const TaskSchema = new mongoose.Schema({
+    title: String,
+    description: {type: String, default: null},
+    completed: {type: Boolean, default: false},
+}, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}});
+const Task = mongoose.model('Task', TaskSchema);
+
 app.use(
     express.json(),
     express.static(__dirname+'/public/dist/public')
 );
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/people' ,{useNewUrlParser: true});
-const PeopleSchema = new mongoose.Schema({
-    name: String
-}, {timestamps: true});
-const People = mongoose.model('People', PeopleSchema);
 
-app.get('/', (req, res) => {
-    People.find()
-        .then(people => res.json(people))
+app.get('/api/tasks', (req, res) => {
+    Task.find()
+        .then(tasks => res.json(tasks))
         .catch(err => res.json(err));
 })
 
-app.get('/new/:name', (req, res) => {
-    const { name } = req.params;
-    const person = new People();
-    person.name = name;
-    person.save()
-        .then(p => People.find()
-                .then(people => res.json(people))
-                .catch(err => res.json(err)));
+app.get('/api/tasks/:id', (req, res) => {
+    const { id } = req.params;
+    Task.find({_id: id})
+        .then(task => res.json(task))
+        .catch(err => res.json(err));
 })
 
-app.get('/remove/:name', (req, res) => {
-    const { name } = req.params;
-    People.remove({ name: name})
-        .then(p => People.find()
-            .then(people => res.json(people))
-            .catch(err => res.json(err)));
+app.post('/api/tasks/new', (req, res) => {
+    const task = new Task();
+    task.title = req.body.title;
+    task.description = req.body.description;
+    task.completed = req.body.completed;
+    task.save()
+        .then( t => res.json(t))
+        .catch(err => res.json(err));
 })
 
-app.get('/:name', (req, res) => {
-    const { name } = req.params;
-    People.find({name: name})
-        .then(person => res.json(person))
+app.put('/api/tasks/update/:id', (req, res) => {
+    const { id } = req.params;
+    const task = Task.updateOne({_id: id}, {$set: {title: req.body.title, description: req.body.description, completed: req.body.completed}})
+        .then(utask => res.json(utask))
+        .catch(err => res.json(err));
+})
+
+app.delete('/api/tasks/delete/:id', (req, res) => {
+    const { id } = req.params;
+    Task.remove({_id: id})
+        .then( rtask => res.json(rtask))
         .catch(err => res.json(err));
 })
 
