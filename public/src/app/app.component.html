@@ -298,12 +298,19 @@
 <div class="content" role="main">
 
   <!-- Highlight Card -->
-<h1 >Resful Tasks API</h1>
-<h1>All the tasks:</h1>
-<ul>
-  <li *ngFor = "let task of tasks">{{ task.title }} - {{ task.description }}</li>
-</ul>
+<h1>Resful Tasks API</h1>
 
+<button (click) = "GetAllTasksBtn()">Get all Tasks</button>
+
+  <div *ngFor = "let task of tasks">
+    
+    <h3 style="display: inline-block; font-weight: 100; margin: 10px;">{{ task.title }}</h3>
+    <button (click) = "GetTaskDetail(task._id)">Show</button>
+
+  </div>
+
+  <h3 style="font-weight: 100;">{{ curtask.title }}</h3>
+  <h5 style="font-weight: 100;">{{ curtask.description }}</h5>
 
 </div>
 

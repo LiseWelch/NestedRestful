@@ -25,8 +25,11 @@ app.get('/api/tasks', (req, res) => {
 
 app.get('/api/tasks/:id', (req, res) => {
     const { id } = req.params;
+    let obj;
     Task.find({_id: id})
-        .then(task => res.json(task))
+        .then(task => {
+            obj = { "task": task};
+            res.json(obj)})
         .catch(err => res.json(err));
 })
 

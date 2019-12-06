@@ -11,4 +11,9 @@ export class HttpService {
     return this._http.get('/api/tasks');
   }
 
+  getTask(id:string) {
+    console.log("hey")
+    return this._http.get('api/tasks/'+id);
+  }
+
 }
