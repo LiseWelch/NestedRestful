@@ -5,10 +5,12 @@ import { HttpService } from './http.service';
 
 import { AppComponent } from './app.component';
 import { HttpClient } from 'selenium-webdriver/http';
+import { TaskComponent } from './task/task.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TaskComponent
   ],
   imports: [
     BrowserModule,
